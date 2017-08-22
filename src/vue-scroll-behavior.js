@@ -64,11 +64,16 @@ vueScrollBehavior.install = function (Vue, options) {
 
       })
 
+      function setScrollPositionWithCallback (route, position = {x: 0, y: 0}) {
+          console.log('set scroll to', position)
+          setScrollPosition(Vue, options.callback ? options.callback(route, position) : position)
+      }
+
       // Router afterEach
       router.afterEach(route => {
 
         if (isIgnoreRoute(route)) {
-          setScrollPosition(Vue)
+          setScrollPositionWithCallback(route)
         } else {
 
           let savedPosition = this.vsbHistoryList.find(e => {
@@ -76,9 +81,9 @@ vueScrollBehavior.install = function (Vue, options) {
           })
 
           if (typeof savedPosition !== 'undefined') {
-            setScrollPosition(Vue, savedPosition.position)
+            setScrollPositionWithCallback(route, savedPosition.position)
           } else {
-            setScrollPosition(Vue)
+            setScrollPositionWithCallback(route)
           }
         }
 
